@@ -1,0 +1,17 @@
+{
+  "name": "ntxuva",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node --watch ./build/server.mjs",
+    "build": "node build.js"
+  },
+  "type" : "module",
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  }
+}
