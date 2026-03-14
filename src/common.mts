@@ -37,7 +37,13 @@ export function hasOwnProp (o: Object, p: string): boolean {
 
 /** This function will normalize the filepath */
 export let loadFileAsBuffer = async (filepath: string) => {
-    const normalized_path = path.resolve(".", filepath);
+    let normalized_path;
+    if(!filepath.startsWith(BASE_DIR)){
+        normalized_path = path.resolve(path.join(BASE_DIR, filepath));
+    } else {
+        normalized_path = path.resolve(filepath);
+    }
+    
     const filename = path.basename(normalized_path);
     const ext = path.extname(filename);
     
@@ -47,6 +53,10 @@ export let loadFileAsBuffer = async (filepath: string) => {
     };
     
     const content_type = allowed_extensions[ext as allowed_extension_t]
+    if(!normalized_path.startsWith(BASE_DIR)) {
+        console.log(normalized_path);
+        console.log(BASE_DIR);
+    }
     if(!normalized_path.startsWith(BASE_DIR)) return {buffer: [], status: false, content_type, message: "anauthorized dir"};
 
     const result = await (async () => {

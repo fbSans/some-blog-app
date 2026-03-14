@@ -62,13 +62,17 @@ router.get("/.*", (req, res) => {
     if(!req.url){ return res.writeHead(400).end()}
     loadFileAsBuffer(req.url)
     .then((v) => {
-        res.writeHead(200, {
-            "content-type": v.content_type,
-        });
-        res.write(v.buffer.toString());
-        console.log(v.content_type);
+        if(v.status){
+            res.writeHead(200, {
+                "content-type": v.content_type,
+            });
+            res.write(v.buffer.toString());
+        }else {
+            console.log(v.message)
+            res.writeHead(404);
+        }
     }).catch((err) => {
-        console.error(err);
+        console.log(err)
     }).finally(()=> {
         res.end();
     });
