@@ -51,7 +51,7 @@ export const makeRouter = () => {
             
             for(let pattern in method_routes){
                 const pattern_result = (new URLPattern({pathname: pattern})).exec({pathname: uri})
-                if(pattern_result) { //this maching is not well tested yet
+                if(pattern_result) { 
                     return {found: true, handler: method_routes[pattern], pattern_result}
                 } 
             }
