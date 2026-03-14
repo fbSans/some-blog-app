@@ -1,10 +1,15 @@
 import * as path from "path"
 import { readFile} from "fs/promises";
 
+export const DB_NAME = "app.sqlite";
+export const NR_ROUTE_ITEM = 'number_route'
+
 export const BASE_DIR = path.resolve('.');
 export const ASSETS_PATH = path.resolve(BASE_DIR, "assets/")
 export const IMAGES_PATH = path.resolve(ASSETS_PATH, "images")
 export const FAVICON_PATH = path.resolve(IMAGES_PATH, "favicon.png")
+export const DB_DIR = path.resolve(BASE_DIR, "database")
+export const DB_PATH = path.resolve(DB_DIR, DB_NAME)
 
 type allowed_extension_t = ".txt" | ".html" | ".htm" | ".css" | ".js" | ".mjs" | ".png" | ".ico"
 

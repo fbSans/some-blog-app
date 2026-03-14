@@ -3,7 +3,7 @@ import path from "path";
 import { argv, exit } from "process";
 
 const source_folder = "./src"
-const source = ["./server.mts", "./common.mts", "./router.mts"]
+const source = ["./server.mts", "./common.mts", "./router.mts", "./database.mjs"]
                .map((p) => { return path.join(source_folder, p);});
 
 const tsc_path = path.join(".", "node_modules", ".bin", "tsc");

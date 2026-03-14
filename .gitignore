@@ -30,4 +30,5 @@ yarn-error.log
 ./build/*
 
 package-lock.json
+database/*.sqlite
 
