@@ -11,10 +11,12 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^22.10.1",
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "urlpattern-polyfill": "^10.1.0"
   }
 }
