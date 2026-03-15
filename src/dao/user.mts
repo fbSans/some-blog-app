@@ -20,5 +20,5 @@ export async function check_pass(db: DatabaseSync, {email, password}: User){
    if(!user) return {result: false, message: "system failure, no password"};
    if(!user.password) return false; // this is actual a failure on the system, but password must be set
    const comparison = await bcrypt.compare(password as string, user.password.toString())
-   await {result: comparison, message: comparison ? "sucessfull" : "password did not match"};
+   return {result: comparison, message: comparison ? "sucessfull" : "password did not match"};
 }
