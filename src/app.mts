@@ -1,5 +1,5 @@
-import {LoginPage} from'./components/login.mjs';
+import {HomePage} from'./components/home.mjs';
 
 export default function App(){
-    return LoginPage();
+    return HomePage();
 }

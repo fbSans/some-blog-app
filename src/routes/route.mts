@@ -2,11 +2,12 @@ import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTex
 import {makeRouter} from "../core/router.mjs"
 import * as counts from "../dao/counts.mjs"
 import * as database from "../core/database.mjs"
+import { IncomingMessage, ServerResponse } from "http";
 
 export const router = makeRouter();
 const db = database.get_db();
 
-router.get('/', (_req, res)=>{
+function serveIndexHTML(res: ServerResponse<IncomingMessage>){
     loadFileAsBuffer("index.html").then((v) => {
          if(v.status){
              res.writeHead(200, {
@@ -16,6 +17,10 @@ router.get('/', (_req, res)=>{
              res.writeHead(500).end();
          }
     })
+}
+
+router.get('/', (_req, res)=>{
+    serveIndexHTML(res);
 });
 
 router.get('/number/:number', (req, res, info) => {
@@ -83,6 +88,15 @@ router.get("/.*", (req, res) => {
         res.end();
     });
 })
+
+//Need this to authenticate
+//TODO: Learn how to read form data
+router.post('/login', (req, res) => {
+
+    serveIndexHTML(res);
+})
+
+//Then managing the posts
 
 
 

@@ -8,8 +8,6 @@ const server = http.createServer();
 
 migrations.migrate();
 
-
-
 server.on('request', (req, res) => {
     console.log(`${new Date().toLocaleString()}    HTTP ${req.method} ${req.url}`);
     const method = req.method;
