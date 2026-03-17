@@ -1,7 +1,7 @@
-import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM} from "../common.mjs"
-import {makeRouter} from "../router.mjs"
+import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat} from "../core/common.mjs"
+import {makeRouter} from "../core/router.mjs"
 import * as counts from "../dao/counts.mjs"
-import * as database from "../database.mjs"
+import * as database from "../core/database.mjs"
 
 export const router = makeRouter();
 const db = database.get_db();
@@ -68,7 +68,11 @@ router.get("/.*", (req, res) => {
             res.writeHead(200, {
                 "content-type": v.content_type,
             });
-            res.write(v.buffer.toString());
+            if(IsTextFormat(v.content_type)){
+                res.write(v.buffer.toString());
+            } else {
+                res.write(v.buffer);
+            }
         }else {
             console.log(v.message)
             res.writeHead(404);

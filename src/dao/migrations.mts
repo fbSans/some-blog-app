@@ -1,6 +1,6 @@
-import { get_db } from "../database.mjs"; 
+import { get_db } from "../core/database.mjs"; 
 import { new_item } from "../dao/counts.mjs";
-import { DB_DIR, DB_PATH, NR_ROUTE_ITEM } from "../common.mjs";
+import { DB_DIR, DB_PATH, NR_ROUTE_ITEM } from "../core/common.mjs";
 import * as fs from "fs"
 
 export function migrate(){
@@ -21,7 +21,24 @@ export function migrate(){
          id INTEGER PRIMARY KEY AUTOINCREMENT,
          email TEXT UNIQUE NOT NULL,
          name TEXT NOT NULL,
-         password TEXT NOT NULL
+         password TEXT NOT NULL,
+         created_at datatime NOT NULL,
+         updated_at datetime NOT NULL,
+         deleted_at datetime NULL
+      );   
+   `);
+
+   db.exec(`
+      CREATE TABLE IF NOT EXISTS posts (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         author_id INTEGER NOT NULL,
+         title TEXT NOT NULL,
+         content TEXT NOT NULL,
+         posted_at DATETIME NOT NULL,
+         updated_at DETETIME NOT NULL,
+         deleted_at DETETIME NULL,
+         UNIQUE (author_id, title, posted_at),
+         FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
       );   
    `);
 

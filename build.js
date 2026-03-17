@@ -2,7 +2,7 @@ import { exec} from "child_process";
 import path from "path";
 import { argv, exit } from "process";
 
-const source_folder = "./src"
+const source_folder = "./src";
 const source = ["./server.mts", "./common.mts", "./router.mts", "./database.mjs"]
                .map((p) => { return path.join(source_folder, p);});
 
