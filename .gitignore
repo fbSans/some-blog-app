@@ -23,6 +23,7 @@ yarn-error.log
 !index.js
 !build.js
 *.mjs
+!/public/index.mjs
 *.js.map
 *.tsbuildinfo
 
