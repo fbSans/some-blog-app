@@ -25,7 +25,7 @@ export function MyDiv(...args: any[]){
 }
 
 export function MySpan(...args: any[]){
-    return create('div', ...args);
+    return create('span', ...args);
 }
 
 export function MyH1(...args: any[]){

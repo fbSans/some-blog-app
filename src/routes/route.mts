@@ -3,6 +3,7 @@ import {makeRouter} from "../core/router.mjs"
 import * as counts from "../dao/counts.mjs"
 import * as database from "../core/database.mjs"
 import { IncomingMessage, ServerResponse } from "http";
+import {parse} from "querystring";
 
 export const router = makeRouter();
 const db = database.get_db();
@@ -90,10 +91,31 @@ router.get("/.*", (req, res) => {
 })
 
 //Need this to authenticate
-//TODO: Learn how to read form data
-router.post('/login', (req, res) => {
 
-    serveIndexHTML(res);
+router.post('/login', (req, res) => {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk.toString(); // Convert buffer to string
+    });
+
+
+    req.on('end', () => {;
+        const parsedBody = parse(body);
+        const email = parsedBody['email'] as string;
+        const password = parsedBody['password'] as string;
+
+        //Run validations
+
+        //Check DB
+
+        //If correct send login data
+
+        //If ivalid inform, and redirect to login page
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(parsedBody));
+    });
 })
 
 //Then managing the posts

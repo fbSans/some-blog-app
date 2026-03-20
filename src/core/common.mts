@@ -14,6 +14,10 @@ export const SRC_PATH = path.resolve(BASE_DIR, 'src');
 export const BUILD_PATH = path.resolve(BASE_DIR, 'build');
 export const PUBLIC_PATH = path.resolve(BASE_DIR, 'public');
 
+export const EMAIL_MIN_SIZE = 8;
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const PASSWORD_REGEX = new RegExp(`/^(?=.*\d)(?=.*[A-Za-z]).{${EMAIL_MIN_SIZE},}$/`);
+
 
 type allowed_extension_t = ".txt" | ".html" | ".htm" | ".css" | ".js" | ".mjs" | ".png" | ".ico"
 
