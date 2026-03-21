@@ -14,9 +14,10 @@ export const SRC_PATH = path.resolve(BASE_DIR, 'src');
 export const BUILD_PATH = path.resolve(BASE_DIR, 'build');
 export const PUBLIC_PATH = path.resolve(BASE_DIR, 'public');
 
-export const EMAIL_MIN_SIZE = 8;
+export const PASSWORD_MIN_SIZE = 8;
+export const USERNAME_REGEX = /^[_a-zA-Z0-9]{2,20}$/    
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const PASSWORD_REGEX = new RegExp(`/^(?=.*\d)(?=.*[A-Za-z]).{${EMAIL_MIN_SIZE},}$/`);
+export const PASSWORD_REGEX = RegExp(`^(?=.*\\d)(?=.*[A-Za-z]).{${PASSWORD_MIN_SIZE},}$`);
 
 
 type allowed_extension_t = ".txt" | ".html" | ".htm" | ".css" | ".js" | ".mjs" | ".png" | ".ico"
@@ -50,6 +51,18 @@ export function getValue(o: object, k: string){
 
 export function hasOwnProp (o: Object, p: string): boolean {
     return Object.getOwnPropertyDescriptor(o, p) != undefined;
+}
+
+export function aggregateResult(results: {[key: string]: any}, key: string, error: any){
+    if(!results[key]) {
+        results[key] = error;
+        return;
+    } 
+    if(!(results[key] instanceof Array)){
+        results[key] = [results[key], error]
+        return;
+    }
+    results[key].push(error);
 }
 
 //replace with a better one maybe on javascript api

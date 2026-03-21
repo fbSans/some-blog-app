@@ -1,9 +1,10 @@
-import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat} from "../core/common.mjs"
+import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, USERNAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../core/common.mjs"
 import {makeRouter} from "../core/router.mjs"
 import * as counts from "../dao/counts.mjs"
+import * as user from "../dao/user.mjs"
 import * as database from "../core/database.mjs"
 import { IncomingMessage, ServerResponse } from "http";
-import {parse} from "querystring";
+
 
 export const router = makeRouter();
 const db = database.get_db();
@@ -100,21 +101,81 @@ router.post('/login', (req, res) => {
     });
 
 
-    req.on('end', () => {;
-        const parsedBody = parse(body);
+    req.on('end', async () => {;
+       const parsedBody = JSON.parse(body);
         const email = parsedBody['email'] as string;
         const password = parsedBody['password'] as string;
-
         //Run validations
+        const results: {[key: string]: any} = {};
+        
+        //Input validation
+        if(!EMAIL_REGEX.test(email)) aggregateResult(results, 'error', 'invalid credentials') 
+        if(!PASSWORD_REGEX.test(password)) aggregateResult(results, 'error', 'invalid credentials') 
+        if(Object.getOwnPropertyNames(results).length > 0) {
+            res.writeHead(400).end(JSON.stringify(results));
+            return;
+        }
 
         //Check DB
-
-        //If correct send login data
+        const {result, message} = await user.check_pass(db, {email, password} as user.User);
+        if(!result){
+            aggregateResult(results, 'error', message);
+            res.writeHead(404).end(JSON.stringify(results));
+            return;
+        }
 
         //If ivalid inform, and redirect to login page
-
+        aggregateResult(results, 'token', 'dummy token');
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(parsedBody));
+        res.end(JSON.stringify(results));
+    });
+})
+
+router.post('/register', (req, res) => {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk.toString(); // Convert buffer to string
+    });
+
+
+    req.on('end', async () => {;
+        const parsedBody = JSON.parse(body);
+        const username = parsedBody['username'] as string;
+        const email = parsedBody['email'] as string;
+        const password = parsedBody['password'] as string;
+        //Run validations
+        const results: {[key: string]: any} = {};
+        
+
+        //Input validation
+        if(!USERNAME_REGEX.test(username)) aggregateResult(results, 'error', 'username: invalid username format') 
+        if(!EMAIL_REGEX.test(email)) aggregateResult(results, 'error', 'email: invalid email format') 
+        if(!PASSWORD_REGEX.test(password)) aggregateResult(results, 'error', 'password: invalid password format') 
+        if(Object.getOwnPropertyNames(results).length > 0) {
+            res.writeHead(400).end(JSON.stringify(results));
+            return;
+        }
+
+        //Check DB
+        if(await user.email_taken(db, email)) {
+            aggregateResult(results, 'error', 'email: email already in use');
+            res.writeHead(400).end(JSON.stringify(results));
+            return;
+        }
+        
+        const {changes, message} = await user.new_user(db, {name: username, email, password})
+        if(changes <= 0) {
+            aggregateResult(results, 'error', 'system: failed to add new user');
+            res.writeHead(500).end(JSON.stringify(results));
+            return;
+        }
+        //If correct send login data
+         aggregateResult(results, 'message', 'user registered sucessfully')
+        //If ivalid inform, and redirect to login page
+        
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(results));
     });
 })
 

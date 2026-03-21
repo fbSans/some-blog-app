@@ -1,4 +1,4 @@
-import { MyDiv } from "../core/HTMLComponents.mjs";
+import { MyDiv } from "./HTMLComponents.mjs";
 
 type PageRoute = {url: string, element: HTMLElement}
 
@@ -6,6 +6,7 @@ export function PageRoute(url: string, element: HTMLElement){
     return {url, element}
 }
 
+// TODO: concile hash routes with in page hashes
 export function PageRouter(...routes: PageRoute[]){
     const content = MyDiv();
 
@@ -31,7 +32,6 @@ export function PageRouter(...routes: PageRoute[]){
     }
 
     window.onload = (e) => {
-        console.log(window.location.hash)
         use_hash(window.location.hash.substring(1));
     }
     

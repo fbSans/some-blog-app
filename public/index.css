@@ -6,6 +6,7 @@ html{
 }
 
 body {
+    position: relative;
     background-image: linear-gradient(100deg, rgb(24, 45, 47), rgb(29, 51, 75));
     height: 100vh;
     background-size: cover;
@@ -80,5 +81,66 @@ li:has(a):hover::marker {
 li > a:active{
     font-size: 1.3em;
     color: rgb(255, 119, 119);
+}
+
+#root:has(#login_page, #register_page) {
+    justify-items: center;
+    justify-content: center;
+}
+
+/* #root:has() {
+    justify-items: center;
+    justify-content: center;
+    } */
+    
+#login_page , #register_page {
+    /* background-color: rgb(3, 16, 43); */
+    background-color: rgb(13, 34, 56);
+    position: relative;
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding-bottom: 10px;
+    width: 500px;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    justify-items: center; 
+    margin-top: 50px;
+}
+
+#login_page img, #register_page img{
+    position: relative;
+    display: block;
+    width: 150px;
+    height: 50px;
+    margin-top: 10px;
+}
+
+
+#login_page form, #register_page form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    width: 200px;
+    border: 2px solid yellow;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 20px 0 20px 0;
+    justify-content: center;
+}
+
+#login_page form *, #register_page form *{
+   margin: 10px;
+}
+
+.form_links {
+    box-sizing: border-box;
+    display: flex;
+    * {
+        margin: 5px;
+        color: yellow;
+    }
 }
 

@@ -22,8 +22,8 @@ export function migrate(){
          email TEXT UNIQUE NOT NULL,
          name TEXT NOT NULL,
          password TEXT NOT NULL,
-         created_at datatime NOT NULL,
-         updated_at datetime NOT NULL,
+         created_at datatime NOT NULL default current_timestamp,
+         updated_at datetime NOT NULL default current_timestamp,
          deleted_at datetime NULL
       );   
    `);

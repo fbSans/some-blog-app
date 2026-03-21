@@ -8,28 +8,29 @@ export function HomePage(){
     }
     return MyDiv(
         {className: 'home-page'},
-        MyH1('Welcome'),
-        MyP('My name is Name'),
-        MyP('This is a short presentation page'),
+        MyH1('Welcome to this unfinished page'),
+        MyP('This is just concepts on web development being tested'),
+        MyP('A small blog site will be created here.'),
+        MyP('From the current implementation of the page routing, hash urls do not work for internal page navigation.'),
         MyAside(
             {className: 'navigation'},
             MyH2('Navigation'),
             MyUl(
-                MyLi(MyA('Count page', {href: '/number/1'})),
+                MyLi(MyA('Sign in', {href: '#login'})),
                 MyLi(MyA('About', {href: '#about'})),
                 MyLi(MyA('Contacts', {href: '#contacts'})),
                 MyLi(MyA('GitHub', {href: 'https://github.com/fbSans'})),
             )
         ),
-        MySection(
-            {className: 'home-section'},
-            MyH2('Count Page', {id: 'count'}),
-            MyLabel('Enter a value'),
-            MyBr(),
-            counterInput,
-            MyBr(),
-            counterButton,
-        ),
+        // MySection(
+        //     {className: 'home-section'},
+        //     MyH2('Count Page', {id: 'count'}),
+        //     MyLabel('Enter a value'),
+        //     MyBr(),
+        //     counterInput,
+        //     MyBr(),
+        //     counterButton,
+        // ),
         MySection(
             {className: 'home-section'},
             MyH2('Contacts', {id: 'contacts'}),
