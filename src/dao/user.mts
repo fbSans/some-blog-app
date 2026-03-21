@@ -27,3 +27,8 @@ export async function check_pass(db: DatabaseSync, {email, password}: User){
    const comparison = await bcrypt.compare(password as string, user.password.toString())
    return {result: comparison, message: comparison ? "sucessfull" : "invalid credentials"};
 }
+
+export function all(db: DatabaseSync){
+   const prepared = db.prepare("select * from users");
+   return prepared.all();
+} 

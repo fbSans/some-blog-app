@@ -1,7 +1,8 @@
-import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, USERNAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../core/common.mjs"
+import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, NAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../core/common.mjs"
 import {makeRouter} from "../core/router.mjs"
 import * as counts from "../dao/counts.mjs"
 import * as user from "../dao/user.mjs"
+import * as post from "../dao/post.mjs"
 import * as database from "../core/database.mjs"
 import { IncomingMessage, ServerResponse } from "http";
 
@@ -65,31 +66,6 @@ router.get('/favicon.ico', (_req, res) => {
     });          
 })
 
-// File Handling is the default behavior
-/*path is allways normalized inside */
-router.get("/.*", (req, res) => {
-    if(!req.url){ return res.writeHead(400).end()}
-    loadFileAsBuffer(req.url)
-    .then((v) => {
-        if(v.status){
-            res.writeHead(200, {
-                "content-type": v.content_type,
-            });
-            if(IsTextFormat(v.content_type)){
-                res.write(v.buffer.toString());
-            } else {
-                res.write(v.buffer);
-            }
-        }else {
-            console.log(v.message)
-            res.writeHead(404);
-        }
-    }).catch((err) => {
-        console.log(err)
-    }).finally(()=> {
-        res.end();
-    });
-})
 
 //Need this to authenticate
 
@@ -141,7 +117,7 @@ router.post('/register', (req, res) => {
 
     req.on('end', async () => {;
         const parsedBody = JSON.parse(body);
-        const username = parsedBody['username'] as string;
+        const name = parsedBody['name'] as string;
         const email = parsedBody['email'] as string;
         const password = parsedBody['password'] as string;
         //Run validations
@@ -149,7 +125,7 @@ router.post('/register', (req, res) => {
         
 
         //Input validation
-        if(!USERNAME_REGEX.test(username)) aggregateResult(results, 'error', 'username: invalid username format') 
+        if(!NAME_REGEX.test(name)) aggregateResult(results, 'error', 'name: invalid name format') 
         if(!EMAIL_REGEX.test(email)) aggregateResult(results, 'error', 'email: invalid email format') 
         if(!PASSWORD_REGEX.test(password)) aggregateResult(results, 'error', 'password: invalid password format') 
         if(Object.getOwnPropertyNames(results).length > 0) {
@@ -164,7 +140,7 @@ router.post('/register', (req, res) => {
             return;
         }
         
-        const {changes, message} = await user.new_user(db, {name: username, email, password})
+        const {changes, message} = await user.new_user(db, {name: name, email, password})
         if(changes <= 0) {
             aggregateResult(results, 'error', 'system: failed to add new user');
             res.writeHead(500).end(JSON.stringify(results));
@@ -180,6 +156,40 @@ router.post('/register', (req, res) => {
 })
 
 //Then managing the posts
+router.get('/admin_info', (req, res) => {
+    const data = {
+        users: user.all(db).map((u)=> ({id: u.id, name: u.name, email: u.email})),
+        posts: post.all(db),
+    }
+
+    res.writeHead(200, {"content-type": "application/json"}).end(JSON.stringify(data));
+})
+
+// File Handling is the default behavior
+/*path is allways normalized inside */
+router.get("/.*", (req, res) => {
+    if(!req.url){ return res.writeHead(400).end()}
+    loadFileAsBuffer(req.url)
+    .then((v) => {
+        if(v.status){
+            res.writeHead(200, {
+                "content-type": v.content_type,
+            });
+            if(IsTextFormat(v.content_type)){
+                res.write(v.buffer.toString());
+            } else {
+                res.write(v.buffer);
+            }
+        }else {
+            console.log(v.message)
+            res.writeHead(404);
+        }
+    }).catch((err) => {
+        console.log(err)
+    }).finally(()=> {
+        res.end();
+    });
+})
 
 
 

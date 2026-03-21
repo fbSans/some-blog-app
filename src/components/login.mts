@@ -64,7 +64,7 @@ function RegisterForm() {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         
-        const data = JSON.stringify({username: form['username'].value, email: form['email'].value , password: form['pass'].value});
+        const data = JSON.stringify({name: form['username'].value, email: form['email'].value , password: form['pass'].value});
         (async () =>{
             const response = await fetch('/register', {
                 method: 'POST',
@@ -87,7 +87,7 @@ function RegisterForm() {
     return (
             MyForm(
                 {method: 'post', action: '/register', id: 'register_form', onsubmit: onSubmit},
-                MyInput({type: 'name',  placeholder: 'Username', name: 'username', id: 'username', required: true}),
+                MyInput({type: 'text',  placeholder: 'Name', name: 'username', id: 'username', required: true}),
                 MyInput({type: 'email',  placeholder: 'Email', name: 'email', id: 'email', required: true}),
                 MyInput({type: 'password', placeholder: 'password', name: 'pass', id: 'pass', required: true}),
                 MyInput({type: 'submit', value: 'Register'}),

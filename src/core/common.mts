@@ -15,7 +15,7 @@ export const BUILD_PATH = path.resolve(BASE_DIR, 'build');
 export const PUBLIC_PATH = path.resolve(BASE_DIR, 'public');
 
 export const PASSWORD_MIN_SIZE = 8;
-export const USERNAME_REGEX = /^[_a-zA-Z0-9]{2,20}$/    
+export const NAME_REGEX = /^[_a-zA-Z0-9]{2,20}$/    
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const PASSWORD_REGEX = RegExp(`^(?=.*\\d)(?=.*[A-Za-z]).{${PASSWORD_MIN_SIZE},}$`);
 

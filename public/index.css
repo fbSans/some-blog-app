@@ -144,3 +144,30 @@ li > a:active{
     }
 }
 
+table {
+    border: 2px solid;
+    margin-top: 20px;
+}
+
+td.id, th.id {
+    text-align: end;
+}
+
+td, th{
+    border: 3px solid;
+    width: 200px;
+    margin: 0;
+    padding: 5px;
+}
+
+td {
+    color: black;
+    background-color: aquamarine;
+}
+
+td > button {
+    display: block;
+    width: 95%;
+    height: 100%;
+}
+

@@ -107,6 +107,16 @@ export function MyTable(...args: any[]){
    return create('table', ...args); 
 }
 
+export function MyTHead(...args: any[]){
+   return create('thead', ...args); 
+}
+
+export function MyTBody(...args: any[]){
+   return create('tbody', ...args); 
+}
+
+
+
 export function MyTh(...args: any[]){
    return create('th', ...args); 
 }
