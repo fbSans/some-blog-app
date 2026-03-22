@@ -3,7 +3,7 @@ import { URLPattern } from "urlpattern-polyfill"
 
 
 
-export type Method = 'GET' | 'POST'
+export type Method = 'GET' | 'POST' | 'UPDATE' | 'DELETE'
 export type HandlerInfo = {pattern_result: URLPatternResult | null}
 export type RequestHandler =  (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingMessage>, info: HandlerInfo) => void
 
@@ -21,17 +21,23 @@ export interface Router {
     setDefaultRoute: (handler: RequestHandler) => void, 
     get: (uri: string, handler: RequestHandler) => void,
     post: (uri: string, handler: RequestHandler) => void,
+    update: (uri: string, handler: RequestHandler) => void,
+    delete: (uri: string, handler: RequestHandler) => void,
 }
 
 export const makeRouter = () => {
     let routes: {
         'GET': Routes,
         'POST': Routes,
+        'UPDATE': Routes,
+        'DELETE': Routes,
     };
 
     routes = {
         'GET': {},
         'POST': {},
+        'UPDATE': {},
+        'DELETE': {},
     }
 
 
@@ -66,6 +72,12 @@ export const makeRouter = () => {
         },
         post(uri, handler) {
             this.register('POST', uri, handler);
+        },
+        update(uri, handler) {
+            this.register('UPDATE', uri, handler);
+        },
+        delete(uri, handler) {
+            this.register('DELETE', uri, handler);
         },
     } as Router
 };
