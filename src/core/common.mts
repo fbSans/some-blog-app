@@ -53,6 +53,15 @@ export function hasOwnProp (o: Object, p: string): boolean {
     return Object.getOwnPropertyDescriptor(o, p) != undefined;
 }
 
+export function truthyProps(o: Object){
+    const result: {[key: string]: any} = {};
+    for(const [entry,value] of Object.entries(o)) {
+        if(!value) continue;
+        result[entry] = value;
+    }
+    return result;
+}
+
 export function aggregateResult(results: {[key: string]: any}, key: string, error: any){
     if(!results[key]) {
         results[key] = error;

@@ -115,7 +115,7 @@ router.post('/register', (req, res) => {
     });
 
 
-    req.on('end', async () => {;
+    req.on('end', async () => {
         const parsedBody = JSON.parse(body);
         const name = parsedBody['name'] as string;
         const email = parsedBody['email'] as string;
@@ -150,7 +150,7 @@ router.post('/register', (req, res) => {
          aggregateResult(results, 'message', 'user registered sucessfully')
         //If ivalid inform, and redirect to login page
         
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { 'content-type': 'application/json' });
         res.end(JSON.stringify(results));
     });
 })
@@ -158,11 +158,63 @@ router.post('/register', (req, res) => {
 //Then managing the posts
 router.get('/admin_info', (req, res) => {
     const data = {
-        users: user.all(db).map((u)=> ({id: u.id, name: u.name, email: u.email})),
+        users: user.all(db).map((u)=> ({
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            created_at: u.created_at,
+            updated_at: u.updated_at,
+            deleted_at: u.deleted_at,
+        })),
         posts: post.all(db),
     }
 
     res.writeHead(200, {"content-type": "application/json"}).end(JSON.stringify(data));
+})
+
+router.put('/user', (req, res) => {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk.toString(); // Convert buffer to string
+    });
+    req.on('end', async () => {
+        const parsedBody = JSON.parse(body);
+        let id = parsedBody['id'];
+        let name = parsedBody['name'];
+        let email = parsedBody['email'];
+        let password = parsedBody['password'];
+
+        name = name ? name : undefined;
+        email = email ? email : undefined;
+        password = password ? password : undefined;
+
+        const  update = name || email || password;
+        if(!update) {
+            res.writeHead(200, {"content-type": "application/json"}).end(JSON.stringify({message: 'no change'}));
+        }
+
+
+        //Input validation
+        const results: {[key: string]: any} = {};
+        if(name && !NAME_REGEX.test(name)) aggregateResult(results, 'error', 'name: invalid name format') 
+        if(email && !EMAIL_REGEX.test(email)) aggregateResult(results, 'error', 'email: invalid email format') 
+        if(password && !PASSWORD_REGEX.test(password)) aggregateResult(results, 'error', 'password: invalid password format')
+        if(!isFinite(id)) aggregateResult(results, 'error', 'id: id must be number')     
+        if(Object.getOwnPropertyNames(results).length > 0) {
+            res.writeHead(400).end(JSON.stringify(results));
+            return;
+        }
+
+       
+        const {changes, message} = await user.update(db, {id, name, email, password});
+        if(changes < 0){
+            aggregateResult(results, 'error', 'system: could not change password');
+            res.writeHead(500).end(JSON.stringify(results));
+            return;
+        }
+        res.writeHead(200, {message: 'update sucessfull'});
+    })
 })
 
 // File Handling is the default behavior

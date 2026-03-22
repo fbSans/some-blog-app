@@ -17,7 +17,7 @@ export function migrate(){
 
 
    db.exec(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS user (
          id INTEGER PRIMARY KEY AUTOINCREMENT,
          email TEXT UNIQUE NOT NULL,
          name TEXT NOT NULL,
@@ -42,5 +42,13 @@ export function migrate(){
       );   
    `);
 
+   db.exec(`
+      CREATE TRIGGER IF NOT EXISTS
+      tr_update_user AFTER UPDATE ON user
+      FOR EACH ROW 
+      BEGIN
+         update user set updated_at = current_timestamp where id = OLD.id;
+      END;   
+   `);
    new_item(db, NR_ROUTE_ITEM);
 }

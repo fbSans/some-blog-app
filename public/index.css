@@ -171,3 +171,38 @@ td > button {
     height: 100%;
 }
 
+.user_details {
+    box-sizing: border-box;
+    position: absolute;
+    width: calc(max(50%, fit-content));
+    height: calc(max(40%, fit-content));
+    left: 50%;
+    top: 10%;
+    transform: translate(-50%, 0%);
+    background-color: white;
+    color: black;
+    padding: 20px 30px;
+    border-radius: 5px;
+}
+
+.user_details_form  {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.user_details  button{
+    display: inline-block;
+    width: 100px;
+}
+
+.user_details .button_set {
+    display: flex;
+    margin-top: 20px;
+}
+.user_details_form span.field{
+    color: red;
+    display: inline-block;
+    width: 10em;
+    text-transform: capitalize;
+}

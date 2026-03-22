@@ -1,7 +1,7 @@
 import EventEmitter from "events";
-import { MyButton, MyDiv, MyH2, MySection, MySpan, MyTable, MyTBody, MyTd, MyTh, MyTHead, MyTr } from "../core/HTMLComponents.mjs";
+import { MyButton, MyDiv, MyForm, MyH2, MyInput, MyLabel, MyLi, MySection, MySpan, MyTable, MyTBody, MyTd, MyTh, MyTHead, MyTr, MyUl } from "../core/HTMLComponents.mjs";
 import { User } from "../dao/user.mjs";
-
+declare const root: HTMLElement;
 
 export function AdminPage(){
     let data = undefined;
@@ -50,8 +50,11 @@ function UserSummaryList() {
         tbody
     );
 
-    function UserDetailsButton(_user: User) {
-        return MyButton('Details (no action)');
+    function UserDetailsButton(user: User) {
+        function onClick() {
+            root.appendChild(UserDetails(user));
+        }
+        return MyButton('Details', {onclick: onClick});
     }
 
     window.addEventListener('dataready', (e)=>{
@@ -70,6 +73,49 @@ function UserSummaryList() {
             ))
         }
     })
+
+    return result;
+}
+
+function UserDetails(user: User){
+    async function onUserUpdate(e: SubmitEvent){
+        e.preventDefault();
+        const form = e.target as HTMLElement;
+        if(!('password' in form) || (form['password'] as HTMLInputElement).value.length <= 0) return;
+        
+        const body = JSON.stringify({
+            id: user.id,
+            password: (form['password'] as HTMLInputElement).value
+        })
+
+        const response = await fetch('/user', {
+            method: 'PUT',
+            body,
+        });
+
+        if(response.body){
+            console.log(await response.json())
+        }
+    }
+
+    const result =  MyDiv(
+        {className: "user_details"},
+        MyH2('User details'),
+        MyForm(
+            {className: 'user_details_form', onsubmit: onUserUpdate},
+            MyLabel(MySpan({className: 'field'}, 'name: '), MySpan(user.name)),
+            MyLabel(MySpan({className: 'field'}, 'email: '), MySpan(user.email)),
+            MyLabel(MySpan({className: 'field'}, 'created: '), MySpan(user.created_at)),
+            MyLabel(MySpan({className: 'field'}, 'last update: '), MySpan(user.updated_at)),
+            MyLabel(MySpan({className: 'field'}, 'deleted:'), MySpan(!!user.deleted_at)),
+            MyLabel(MySpan({className: 'field'}, 'change password:'), MyInput({type: "password", name: "password"})),
+            MySpan(
+                {className: "button_set"},
+                MyButton("Update", {type: "submit"}),
+                MyButton("Close", {onclick: () => root.removeChild(result)})
+            )
+        ),
+    );
 
     return result;
 }
