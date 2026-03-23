@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "serve": "node --watch ./build/server.mjs",
-    "build": "node build.js"
+    "serve": "node --watch ./build/server.mjs"
   },
   "type": "module",
   "author": "",

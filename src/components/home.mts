@@ -20,7 +20,6 @@ export function HomePage(){
                 MyLi(MyA('Sign in', {href: '#login'})),
                 MyLi(MyA('About', {href: '#about'})),
                 MyLi(MyA('Contacts', {href: '#contacts'})),
-                MyLi(MyA('GitHub', {href: 'https://github.com/fbSans'})),
             )
         ),
         // MySection(
