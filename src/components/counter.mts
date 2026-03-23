@@ -1,4 +1,4 @@
-import { MyP, MyH1, MySpan, MyDiv, MyH2, MyStrong } from "../core/HTMLComponents.mjs";
+import { MyP, MyH1, MySpan, MyDiv, MyH2, MyStrong } from "../client-core/HTMLComponents.mjs";
 
 export function CountPage(value: number, count: number) {
     return MyDiv(    
