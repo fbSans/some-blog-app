@@ -12,6 +12,7 @@ export function HomePage(){
         MyP('This is just concepts on web development being tested'),
         MyP('A small blog site will be created here.'),
         MyP('From the current implementation of the page routing, hash urls do not work for internal page navigation.'),
+        MyP('Next step is to add authorization model and session'),
         MyAside(
             {className: 'navigation'},
             MyH2('Navigation'),

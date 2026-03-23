@@ -1,6 +1,6 @@
 import * as http from 'http';
 import * as migrations from "./dao/migrations.mjs"
-import { router } from './routes/route.mjs';
+import { router } from './routes/api.mjs';
 
 const PORT = 9090
 const HOST = "localhost"
