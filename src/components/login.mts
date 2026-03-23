@@ -45,7 +45,6 @@ function LoginForm(){
             if(response.status === 200) {
                 setEmail('');
                 setPassword('');
-                window.alert('Logged in sucessfully');
                 if(status_out) status_out.innerText = "";
                 window.location.assign('#home')
             } else if(status_out) {
@@ -88,7 +87,7 @@ function RegisterForm() {
                 setUsername('');
                 setEmail('');
                 setPassword('');
-                window.alert('User registered sucessfully')
+                window.location.assign('#home')
             } else if(status_out) {
                 if(resData.error instanceof Array){
                     status_out.innerText = resData.error[0];
