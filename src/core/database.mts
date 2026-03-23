@@ -82,6 +82,7 @@ export function makeQuery(table: string): QueryBuilder {
          if(!hasWhere) {
             if(prefix === 'select') buffer += `from ${table} `
             buffer += 'where ';
+            hasWhere = true;
          } else {
             buffer += 'and '
          }
@@ -96,6 +97,7 @@ export function makeQuery(table: string): QueryBuilder {
          if(!hasWhere) {
             if(prefix === 'select') buffer += `from ${table} `
             buffer += 'where ';
+            hasWhere = true;
          } else {
             buffer += 'or '
          }
@@ -104,7 +106,7 @@ export function makeQuery(table: string): QueryBuilder {
       },
       build() {
          if(!hasWhere) {
-            if(prefix === 'select') buffer += `from ${table} `
+            if(prefix === 'select' && !hasWhere) buffer += `from ${table} `
          }
          return buffer;
       } 

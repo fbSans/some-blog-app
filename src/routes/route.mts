@@ -215,7 +215,10 @@ router.put('/user', (req, res) => {
             res.writeHead(500).end(JSON.stringify(results));
             return;
         }
-        res.writeHead(200, {message: 'update sucessfull'});
+        const data = user.find(db, id);
+        if(!data) res.writeHead(500).end();
+
+        res.writeHead(200, {message: 'update sucessfull'}).end(JSON.stringify({user: data}));
     })
 })
 

@@ -36,7 +36,6 @@ export async function check_pass(db: DatabaseSync, {email, password}: User){
 }
 
 
-
 export async function update(db: DatabaseSync, user: User) {
    // return {changes: result.changes, message: result.changes > 0 ? "sucessfull" : "database did not insert"};
    if(user.password) user.password = await encryptPassword(user.password);
@@ -47,6 +46,17 @@ export async function update(db: DatabaseSync, user: User) {
 
    const result = prepared.run(user);
    return {changes: result.changes, message: result.changes > 0 ?"update sucessful" : "no changes"};
+}
+
+export function find(db: DatabaseSync, id: number){
+   const query = makeQuery(table).select(['*']).where({operand_name: 'id'}).build();
+   console.log(query)
+   const prepared = db.prepare(query);
+   const result = prepared.get({id});
+   if(result && result.password){
+      delete result.password;
+   }
+   return result; 
 }
 
 export function all(db: DatabaseSync){

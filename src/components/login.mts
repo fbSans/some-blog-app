@@ -1,5 +1,5 @@
 import { MyA, MyDiv, MyForm, MyH1, MyImg, MyInput, MyP } from "../core/HTMLComponents.mjs";
-import {create, values_manager} from "../core/maker.mjs";
+import {create, makeState, StateSetter,} from "../core/maker.mjs";
 
 
 
@@ -23,13 +23,17 @@ export function RegisterPage(){
     );
 }
 
+function onValueChange(e: Event, setValue: StateSetter<string>){
+    setValue((e.target as any).value)
+}
+
 function LoginForm(){
-    const vals = values_manager(); 
+    const [email, setEmail] = makeState('');
+    const [password, setPassword] = makeState('')
+
     function onSubmit(e: SubmitEvent) {
         e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        
-        const data = JSON.stringify({ email: form['email'].value , password: form['pass'].value});
+        const data = JSON.stringify({ email: email().value , password: password().value});
         (async () =>{
             const response = await fetch('/login', {
                 method: 'POST',
@@ -39,8 +43,9 @@ function LoginForm(){
             const status_out = document.getElementById('status_out');
             const resData = await response.json()
             if(response.status === 200) {
-                window.alert('Logged in sucessfully')
-                vals.cleanAll();
+                setEmail('');
+                setPassword('');
+                window.alert('Logged in sucessfully');
                 if(status_out) status_out.innerText = "";
                 window.location.assign('#home')
             } else if(status_out) {
@@ -54,22 +59,23 @@ function LoginForm(){
     }
     
     return (
-            MyForm(
-                {method: 'post', id: 'login_form', onsubmit: onSubmit},
-                vals.add(MyInput({type: 'email',  placeholder: 'email', name: 'email', id: 'email', required: true})),
-                vals.add(MyInput({type: 'password', placeholder: 'password', name: 'pass', id: 'pass', required: true})),
-                vals.add(MyInput({type: 'submit', value: 'Login'})),
-            )
+        MyForm(
+            {method: 'post', id: 'login_form', onsubmit: onSubmit},
+            MyInput({type: 'email', name: 'email', placeholder: 'email', value: email, required: true, onchange: (e: Event) => onValueChange(e, setEmail)}),
+            MyInput({type: 'password', name: 'password', placeholder: 'password', value: password, required: true,onchange: (e: Event) => onValueChange(e, setPassword)}),
+            MyInput({type: 'submit', value: 'Login'}),
+        )
     ); 
 }
 
 function RegisterForm() {
-    const vals = values_manager();
+    const [username, setUsername] = makeState('');
+    const [email, setEmail] = makeState('');
+    const [password, setPassword] = makeState('')
+
     function onSubmit(e: SubmitEvent) {
         e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        
-        const data = JSON.stringify({name: form['username'].value, email: form['email'].value , password: form['pass'].value});
+        const data = JSON.stringify({name: username().value, email: email().value , password: password().value});
         (async () =>{
             const response = await fetch('/register', {
                 method: 'POST',
@@ -79,8 +85,10 @@ function RegisterForm() {
             const status_out = document.getElementById('status_out');
             const resData = await response.json()
             if(response.status === 200) {
+                setUsername('');
+                setEmail('');
+                setPassword('');
                 window.alert('User registered sucessfully')
-                vals.cleanAll();
             } else if(status_out) {
                 if(resData.error instanceof Array){
                     status_out.innerText = resData.error[0];
@@ -91,13 +99,13 @@ function RegisterForm() {
         })();
     }
     return (
-            MyForm(
-                {method: 'post', action: '/register', id: 'register_form', onsubmit: onSubmit},
-                vals.add(MyInput({type: 'text',  placeholder: 'Name', name: 'username', id: 'username', required: true})),
-                vals.add(MyInput({type: 'email',  placeholder: 'Email', name: 'email', id: 'email', required: true})),
-                vals.add(MyInput({type: 'password', placeholder: 'password', name: 'pass', id: 'pass', required: true})),
-                MyInput({type: 'submit', value: 'Register'}),
-            )
+        MyForm(
+            {method: 'post', action: '/register', id: 'register_form', onsubmit: onSubmit},
+            MyInput({type: 'text',     placeholder: 'username', value: username, required: true, onchange: (e: Event) => onValueChange(e, setUsername)}),
+            MyInput({type: 'email',    placeholder: 'email',    value: email,    required: true, onchange: (e: Event) => onValueChange(e, setEmail)}),
+            MyInput({type: 'password', placeholder: 'password', value: password, required: true, onchange: (e: Event) => onValueChange(e, setPassword)}),
+            MyInput({type: 'submit',   value: 'Register'}),
+        )
     );
 }
 

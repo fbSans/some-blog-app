@@ -1,7 +1,13 @@
 import EventEmitter from "events";
 import { MyButton, MyDiv, MyForm, MyH2, MyInput, MyLabel, MyLi, MySection, MySpan, MyTable, MyTBody, MyTd, MyTh, MyTHead, MyTr, MyUl } from "../core/HTMLComponents.mjs";
 import { User } from "../dao/user.mjs";
+import { makeState, StateSetter } from "../core/maker.mjs";
 declare const root: HTMLElement;
+
+function onValueChange(e: Event, setValue: StateSetter<string>){
+    setValue((e.target as any).value)
+}
+
 
 export function AdminPage(){
     let data = undefined;
@@ -78,23 +84,43 @@ function UserSummaryList() {
 }
 
 function UserDetails(user: User){
-    async function onUserUpdate(e: SubmitEvent){
+        const [id, setId] = makeState(user.id);
+        const [username, setUsername] = makeState(user.name);
+        const [email, setEmail] = makeState(user.email);
+        const [created_at, setCreatedAt] = makeState(user.created_at);
+        const [updated_at, setUpdatedAt] = makeState(user.updated_at);
+        const [deleted, setDeleted] = makeState(!!user.deleted_at);
+        const [password, setPassword] = makeState('');
+
+        async function onUserUpdate(e: SubmitEvent){
         e.preventDefault();
         const form = e.target as HTMLElement;
-        if(!('password' in form) || (form['password'] as HTMLInputElement).value.length <= 0) return;
+        if(password().value.length <= 0) return;
         
         const body = JSON.stringify({
-            id: user.id,
-            password: (form['password'] as HTMLInputElement).value
+            id: id().value,
+            password: password().value
         })
+
 
         const response = await fetch('/user', {
             method: 'PUT',
             body,
         });
 
+        if(response.status !== 200) {window.alert('failed to update password')}
         if(response.body){
-            console.log(await response.json())
+            const data = await response.json();
+            if(data.user){
+               window.alert('password updated successfully')
+               const  updated = data.user as User;
+               setUsername(updated.name);
+               setEmail(updated.email);
+               setCreatedAt(updated.created_at);
+               setUpdatedAt(updated.updated_at);
+               setDeleted(!!updated.deleted_at);
+               setPassword('');
+            }
         }
     }
 
@@ -103,12 +129,12 @@ function UserDetails(user: User){
         MyH2('User details'),
         MyForm(
             {className: 'user_details_form', onsubmit: onUserUpdate},
-            MyLabel(MySpan({className: 'field'}, 'name: '), MySpan(user.name)),
-            MyLabel(MySpan({className: 'field'}, 'email: '), MySpan(user.email)),
-            MyLabel(MySpan({className: 'field'}, 'created: '), MySpan(user.created_at)),
-            MyLabel(MySpan({className: 'field'}, 'last update: '), MySpan(user.updated_at)),
-            MyLabel(MySpan({className: 'field'}, 'deleted:'), MySpan(!!user.deleted_at)),
-            MyLabel(MySpan({className: 'field'}, 'change password:'), MyInput({type: "password", name: "password"})),
+            MyLabel(MySpan({className: 'field'}, 'name: '),  MySpan(username)),
+            MyLabel(MySpan({className: 'field'}, 'email: '),  MySpan(email)),
+            MyLabel(MySpan({className: 'field'}, 'created: '), MySpan(created_at)),
+            MyLabel(MySpan({className: 'field'}, 'last update: '), MySpan(updated_at)),
+            MyLabel(MySpan({className: 'field'}, 'deleted:'), MySpan(deleted)),
+            MyLabel(MySpan({className: 'field'}, 'change password:'), MyInput({type: "password", name: "password", value: password, onchange: (e: Event) => onValueChange(e, setPassword) })),
             MySpan(
                 {className: "button_set"},
                 MyButton("Update", {type: "submit"}),
