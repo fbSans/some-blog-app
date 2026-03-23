@@ -29,7 +29,7 @@ yarn-error.log
 
 *.cmd
 
-./build/*
+
 
 package-lock.json
 database/*.sqlite
