@@ -43,6 +43,7 @@ function LoginForm(){
             const status_out = document.getElementById('status_out');
             const resData = await response.json()
             if(response.status === 200) {
+                console.log(JSON.parse(resData));
                 setEmail('');
                 setPassword('');
                 if(status_out) status_out.innerText = "";

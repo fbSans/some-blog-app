@@ -139,7 +139,7 @@ export function parseCookie(req: IncomingMessage) {
 export async function checkSession(res: ServerResponse<IncomingMessage>, cookies: {[key: string]: string}){
     if(!cookies['sessionId']){
         res.statusCode = 401;
-        res.end('Anauthorized')
+        res.end(JSON.stringify({error: 'Anauthorized'}))
         return;
     }
 
@@ -147,17 +147,18 @@ export async function checkSession(res: ServerResponse<IncomingMessage>, cookies
     const values = await redis.get(cookies['sessionId']);
     if(!values) {
         res.statusCode = 401;
-        res.end('Anauthorized')
+        res.end(JSON.stringify({error: 'Anauthorized'}))
         return; 
     }
 
 
     const info = JSON.parse(values as string) as {id: number, valid: boolean};
     if(!info.valid) {
+        await redis.del(cookies['sessionId']);
         res.statusCode = 401;
-        res.end('Anauthorized')
+        res.end(JSON.stringify({error: 'Anauthorized'}))
         return; 
     }
-
-    return info.id;
+    redis.close();
+    return info.id
 }

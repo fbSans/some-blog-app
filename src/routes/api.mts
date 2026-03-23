@@ -119,14 +119,14 @@ router.post('/login', (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
 
-        aggregateResult(results, 'token', JSON.stringify({user: userData}));
+        aggregateResult(results, 'user', JSON.stringify(userData));
         res.end(JSON.stringify(results));
     });
 })
 
 router.post('/register', (req, res, info) => {
-    const id = checkSession(res, info.cookies)
-    if(!id) return;
+    // const id = checkSession(res, info.cookies)
+    // if(!id) return;
     let body = '';
 
     req.on('data', (chunk) => {

@@ -12,6 +12,9 @@ export function AdminPage(){
     let data = undefined;
     (async () => {
         const response = await fetch('/admin_info');
+        if(response.status !== 200){
+            return;
+        }
         data = await response.json() //will store this a sort of a state
         dispatchEvent(new CustomEvent('dataready', {bubbles: false, cancelable: true, detail: data}));
     })();
