@@ -11,7 +11,14 @@ export function makeState<T>(initialState: T): [StateGetter<T>, StateSetter<T>] 
     const __event_name = `${prefix}${counter}`;
     
     const state_getter =  function() {
-        return {__maker_state: 1, value: internal_state, __event_name}
+        return {
+                __maker_state: 1,
+
+                get value(){ 
+                   return internal_state;
+                }, //
+                set value(_v){ /*does nothing*/},
+                __event_name}
     }
 
     const state_setter = (newState: T) => {
