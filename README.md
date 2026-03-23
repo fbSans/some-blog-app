@@ -1,7 +1,9 @@
 # Web application with JS/node
 
-Experimenting with some concepts usually provided by frameworks
-The end goal is to make a little blog post as an exercise
+Experimenting with some concepts usually provided by frameworks.
+
+The end goal is to make a little blog post as an exercise.
+
 This is in no way a proper implementation, and may take a long time while unfinished
 
 ## To run it
