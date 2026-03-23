@@ -14,3 +14,24 @@ export function create(tagName: string, ...args: any[]) {
     }
     return element;
 }
+
+
+//For manual values handling
+//Not ideal, but works
+//Motivated by the need of cleaning input fields simultaneosly.
+export function values_manager(){
+    const values: any[] = [];
+    return {
+        add(element: any){
+            values.push(element)
+            return element;
+        },
+        cleanAll(){
+            for(const value of values){
+                if('value' in value){
+                    value.value = '';
+                }
+            }
+        }
+    };
+}

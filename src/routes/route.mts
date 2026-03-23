@@ -78,7 +78,7 @@ router.post('/login', (req, res) => {
 
 
     req.on('end', async () => {;
-       const parsedBody = JSON.parse(body);
+        const parsedBody = JSON.parse(body);
         const email = parsedBody['email'] as string;
         const password = parsedBody['password'] as string;
         //Run validations
@@ -92,14 +92,16 @@ router.post('/login', (req, res) => {
             return;
         }
 
+        
         //Check DB
         const {result, message} = await user.check_pass(db, {email, password} as user.User);
         if(!result){
             aggregateResult(results, 'error', message);
             res.writeHead(404).end(JSON.stringify(results));
+            console.log(result)
             return;
         }
-
+        
         //If ivalid inform, and redirect to login page
         aggregateResult(results, 'token', 'dummy token');
         res.writeHead(200, { 'Content-Type': 'application/json' });
