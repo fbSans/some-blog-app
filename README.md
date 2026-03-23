@@ -11,7 +11,7 @@ $    node_modules/bin/tsc --outdir ./build
 $    npm run serve
 ```
 
-## Explore what exists now on links:
+## Explore what exists now on links (after running the server):
 * http://localhost:9090/
 * http://localhost:9090/#home
 * http://localhost:9090/#admin
