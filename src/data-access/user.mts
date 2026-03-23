@@ -50,13 +50,22 @@ export async function update(db: DatabaseSync, user: User) {
 
 export function find(db: DatabaseSync, id: number){
    const query = makeQuery(table).select(['*']).where({operand_name: 'id'}).build();
-   console.log(query)
    const prepared = db.prepare(query);
    const result = prepared.get({id});
    if(result && result.password){
       delete result.password;
    }
    return result; 
+}
+
+export function byEmail(db: DatabaseSync, email: string) {
+   const query = makeQuery(table).select(['*']).where({operand_name: 'email'}).build();
+   const prepared = db.prepare(query);
+   const result = prepared.get({email});
+   if(result && result.password){
+      delete result.password;
+   }
+   return result;
 }
 
 export function all(db: DatabaseSync){

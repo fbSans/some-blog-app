@@ -1,5 +1,7 @@
 import * as path from "path"
 import { readFile} from "fs/promises";
+import { IncomingMessage, ServerResponse } from "http";
+import { redisClient } from "./redis.mjs";
 
 export const DB_NAME = "app.sqlite";
 export const NR_ROUTE_ITEM = 'number_route'
@@ -121,4 +123,41 @@ export let loadFileAsBuffer = async (filepath: string) => {
     })();
 
     return result;
+}
+
+export function parseCookie(req: IncomingMessage) {
+    if(!req.headers.cookie) return {};
+    const cookies: {[key: string]: string} = {};
+    req.headers.cookie.split(';').forEach((cookie) => {
+        const [name, ...rest] = cookie.split("=");
+        cookies[name.trim()] = rest.join('=')
+    })
+    return cookies;
+}
+
+//No middleware machanism in place yet
+export async function checkSession(res: ServerResponse<IncomingMessage>, cookies: {[key: string]: string}){
+    if(!cookies['sessionId']){
+        res.statusCode = 401;
+        res.end('Anauthorized')
+        return;
+    }
+
+    const redis = await redisClient();
+    const values = await redis.get(cookies['sessionId']);
+    if(!values) {
+        res.statusCode = 401;
+        res.end('Anauthorized')
+        return; 
+    }
+
+
+    const info = JSON.parse(values as string) as {id: number, valid: boolean};
+    if(!info.valid) {
+        res.statusCode = 401;
+        res.end('Anauthorized')
+        return; 
+    }
+
+    return info.id;
 }

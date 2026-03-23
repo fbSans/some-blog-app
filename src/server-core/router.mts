@@ -4,7 +4,7 @@ import { URLPattern } from "urlpattern-polyfill"
 
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
-export type HandlerInfo = {pattern_result: URLPatternResult | null}
+export type HandlerInfo = {pattern_result: URLPatternResult | null, cookies: {[key: string]: string}}
 export type RequestHandler =  (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingMessage>, info: HandlerInfo) => void
 
 

@@ -1,10 +1,14 @@
-import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, NAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../server-core/common.mjs"
+import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, NAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult, checkSession} from "../server-core/common.mjs"
 import {makeRouter} from "../server-core/router.mjs"
 import * as counts from "../data-access/counts.mjs"
 import * as user from "../data-access/user.mjs"
 import * as post from "../data-access/post.mjs"
 import * as database from "../server-core/database.mjs"
 import { IncomingMessage, ServerResponse } from "http";
+import { redisClient } from "../server-core/redis.mjs"
+import * as crypto from "crypto";
+import { json } from "stream/consumers"
+import { User } from "../data-access/user.mjs"
 
 
 export const router = makeRouter();
@@ -103,13 +107,26 @@ router.post('/login', (req, res) => {
         }
         
         //If ivalid inform, and redirect to login page
-        aggregateResult(results, 'token', 'dummy token');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        const userData = user.byEmail(db, email) as User;
+        
+        
+        const redis = await redisClient();
+        const sessionId = crypto.randomBytes(16).toString('hex');
+        await redis.set(sessionId, JSON.stringify({id: userData.id, valid: true}) , {expiration: {type: 'EX', value: 3600}});
+        await redis.close();
+
+        res.setHeader('Set-Cookie', `session_id=${sessionId}; HttpOnly; Path=/;`);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+
+        aggregateResult(results, 'token', JSON.stringify({user: userData}));
         res.end(JSON.stringify(results));
     });
 })
 
-router.post('/register', (req, res) => {
+router.post('/register', (req, res, info) => {
+    const id = checkSession(res, info.cookies)
+    if(!id) return;
     let body = '';
 
     req.on('data', (chunk) => {
@@ -158,7 +175,10 @@ router.post('/register', (req, res) => {
 })
 
 //Then managing the posts
-router.get('/admin_info', (req, res) => {
+router.get('/admin_info', async (req, res, info) => {
+    const id = await checkSession(res, info.cookies);
+    if(!id) return;
+
     const data = {
         users: user.all(db).map((u)=> ({
             id: u.id,
@@ -174,7 +194,10 @@ router.get('/admin_info', (req, res) => {
     res.writeHead(200, {"content-type": "application/json"}).end(JSON.stringify(data));
 })
 
-router.put('/user', (req, res) => {
+router.put('/user', async (req, res, info) => {
+    const id = await checkSession(res, info.cookies);
+    if(!id) return;
+
     let body = '';
 
     req.on('data', (chunk) => {
