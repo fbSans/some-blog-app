@@ -1,4 +1,4 @@
-import { MyDiv } from "./HTMLComponents.mjs";
+import { MyDiv } from "../client-core/HTMLComponents.mjs";
 
 type PageRoute = {url: string, element: HTMLElement}
 

@@ -1,9 +1,9 @@
-import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, NAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../core/common.mjs"
-import {makeRouter} from "../core/router.mjs"
-import * as counts from "../dao/counts.mjs"
-import * as user from "../dao/user.mjs"
-import * as post from "../dao/post.mjs"
-import * as database from "../core/database.mjs"
+import {FAVICON_PATH, loadFileAsBuffer, allowed_extensions, NR_ROUTE_ITEM, IsTextFormat, NAME_REGEX, EMAIL_REGEX, PASSWORD_REGEX, aggregateResult} from "../server-core/common.mjs"
+import {makeRouter} from "../server-core/router.mjs"
+import * as counts from "../data-access/counts.mjs"
+import * as user from "../data-access/user.mjs"
+import * as post from "../data-access/post.mjs"
+import * as database from "../server-core/database.mjs"
 import { IncomingMessage, ServerResponse } from "http";
 
 

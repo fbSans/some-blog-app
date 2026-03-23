@@ -1,7 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
 import * as bcrypt from "bcrypt";
-import { makeQuery } from "../core/database.mjs";
-import { truthyProps } from "../core/common.mjs";
+import { makeQuery } from "../server-core/database.mjs";
+import { truthyProps } from "../server-core/common.mjs";
 
 const table = 'user'
 export type User = {id?: number, email: string, name: string, password?: string, created_at?: string, updated_at?: string, deleted_at?:string}

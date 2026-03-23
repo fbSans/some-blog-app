@@ -1,6 +1,6 @@
-import { get_db } from "../core/database.mjs"; 
-import { new_item } from "../dao/counts.mjs";
-import { DB_DIR, DB_PATH, NR_ROUTE_ITEM } from "../core/common.mjs";
+import { get_db } from "../server-core/database.mjs"; 
+import { new_item } from "./counts.mjs";
+import { DB_DIR, DB_PATH, NR_ROUTE_ITEM } from "../server-core/common.mjs";
 import * as fs from "fs"
 
 export function migrate(){

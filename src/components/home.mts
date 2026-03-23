@@ -1,4 +1,4 @@
-import { MyDiv, MyH1, MyLi, MyP, MyUl, MyA, MyH2, MyAside, MySection, MyInput, MyButton, MyLabel, MyBr, MyForm } from "../core/HTMLComponents.mjs";
+import { MyDiv, MyH1, MyLi, MyP, MyUl, MyA, MyH2, MyAside, MySection, MyInput, MyButton, MyLabel, MyBr, MyForm } from "../client-core/HTMLComponents.mjs";
 
 export function HomePage(){
     const counterInput = MyInput({value: 0}) as HTMLInputElement;

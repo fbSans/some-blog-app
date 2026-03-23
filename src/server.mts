@@ -1,5 +1,5 @@
 import * as http from 'http';
-import * as migrations from "./dao/migrations.mjs"
+import * as migrations from "./data-access/migrations.mjs"
 import { router } from './routes/api.mjs';
 
 const PORT = 9090

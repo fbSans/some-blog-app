@@ -1,5 +1,5 @@
-import { MyA, MyDiv, MyForm, MyH1, MyImg, MyInput, MyP } from "../core/HTMLComponents.mjs";
-import {create, makeState, StateSetter,} from "../core/maker.mjs";
+import { MyA, MyDiv, MyForm, MyH1, MyImg, MyInput, MyP } from "../client-core/HTMLComponents.mjs";
+import {create, makeState, StateSetter,} from "../client-core/maker.mjs";
 
 
 

@@ -1,6 +1,6 @@
 import { CountPage } from './components/counter.mjs';
 import {HomePage} from'./components/home.mjs';
-import { PageRoute, PageRouter } from './core/page-router.mjs';
+import { PageRoute, PageRouter } from './client-core/page-router.mjs';
 import {LoginPage, RegisterPage} from'./components/login.mjs';
 import { AdminPage } from './components/admin.mjs';
 

@@ -1,7 +1,6 @@
-import EventEmitter from "events";
-import { MyButton, MyDiv, MyForm, MyH2, MyInput, MyLabel, MyLi, MySection, MySpan, MyTable, MyTBody, MyTd, MyTh, MyTHead, MyTr, MyUl } from "../core/HTMLComponents.mjs";
-import { User } from "../dao/user.mjs";
-import { makeState, StateSetter } from "../core/maker.mjs";
+import { MyButton, MyDiv, MyForm, MyH2, MyInput, MyLabel, MyLi, MySection, MySpan, MyTable, MyTBody, MyTd, MyTh, MyTHead, MyTr, MyUl } from "../client-core/HTMLComponents.mjs";
+import { User } from "../data-access/user.mjs";
+import { makeState, StateSetter } from "../client-core/maker.mjs";
 declare const root: HTMLElement;
 
 function onValueChange(e: Event, setValue: StateSetter<string>){
